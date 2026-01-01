@@ -13,6 +13,8 @@ class _ColorScreenState extends State<ColorScreen> {
   Color? mixedColor;
   String? mixedName;
 
+  // list available color
+
   final colors = [
     ColorModel(name: "Red", color: Colors.red),
     ColorModel(name: "Blue", color: Colors.blue),
@@ -31,7 +33,7 @@ class _ColorScreenState extends State<ColorScreen> {
 
   ColorModel? firstColor;
   ColorModel? secondColor;
-
+//// Helper function to generate a unique key for a pair of colors
   String _pairKey(String a, String b) {
     final list = [a.trim(), b.trim()]..sort();
     return '${list[0]}|${list[1]}';
