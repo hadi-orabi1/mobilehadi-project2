@@ -2,24 +2,39 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const mysql = require('mysql2');
-
+const dotenv = require('dotenv');
+dotenv.config();
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-const db = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: '',
-  database: 'flutter',
+const ssl =
+  process.env.DB_ENABLE_SSL === "true"
+    ? {
+        minVersion: "TLSv1.2",
+        // For TiDB Cloud Starter, you usually DON'T need a CA file
+        // because Node trusts the public CA by default. :contentReference[oaicite:2]{index=2}
+        ca: process.env.DB_CA_PATH
+          ? fs.readFileSync(process.env.DB_CA_PATH)
+          : undefined,
+      }
+    : null;
+
+const db = mysql.createPool({
+  host: process.env.DB_HOST,
+  port: Number(process.env.DB_PORT || 4000),
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_DATABASE,
+  ssl,
 });
 
-db.connect((err) => {
+db.getConnection((err) => {
   if (err) {
-    console.error('MySQL connection failed:', err);
-    process.exit(1);
+    console.error("Database connection failed:", err);
+  } else {
+    console.log("Connected to MySQL database");
   }
-  console.log('MySQL Connected...');
 });
 
 app.get('/', (_req, res) => {
@@ -133,3 +148,4 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
