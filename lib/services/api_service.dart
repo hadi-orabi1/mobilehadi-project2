@@ -1,7 +1,8 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-const String apiRoot = 'http://localhost:5000/api';
+// const String apiRoot = 'http://localhost:5000/api';
+const String apiRoot = 'https://mobilehadi-project2.onrender.com/api';
 
 Future<Map<String, dynamic>> createUser(String name) async {
   final trimmed = name.trim();
